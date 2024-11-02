@@ -4,6 +4,7 @@
 using namespace std;
 
 //Gauss Calculator
+//print the augmented matrix ... matrix
 void printMatrix(vector<vector<double>>& matrix)
 {
     for (int i = 0; i < matrix.size(); i++)
@@ -11,7 +12,15 @@ void printMatrix(vector<vector<double>>& matrix)
         cout << "| ";
         for (int j = 0; j < matrix[i].size(); j++)
         {
-            cout << setprecision(1) <<setw(6)<< matrix[i][j] << " ";
+           
+            if(j==matrix.size())
+            {
+                 cout << setprecision(1) <<setw(6)<<" | "<< matrix[i][j] << " ";
+            }
+            else
+            {
+                 cout << setprecision(1) <<setw(6)<< matrix[i][j] << " ";
+            }
         }
         cout <<setw(6)<< "|" << endl;
     }
@@ -21,29 +30,29 @@ void swapRows(vector<vector<double>>& matrix, int row1, int row2)
 {
     for (int j = 0; j < matrix[row1].size(); j++)
     {
+        //swap element by element
         swap(matrix[row1][j], matrix[row2][j]);
     }
-    cout << "After swapping R" << row1 << " with R" << row2 << ":" << endl;
+    
+    cout << "After swapping R" << row1+1 << " with R" << row2+1 << ":" << endl;
     printMatrix(matrix);
 }
 
-void normalizeRow(vector<vector<double>>& matrix, int row, int pivot)
+//show the leading
+void normalizeRow(vector<vector<double>>& matrix, int row, int indexpivot)
 {
-    double pivotValue = matrix[row][pivot];
-    if (pivotValue == 0)
-
-    {
-        cout << "Cannot normalize this row\n";
-        return;
-    }
+    double pivotValue = matrix[row][indexpivot];
+  
     for (int j = 0; j < matrix[row].size(); j++)
     {
+        //to make it leading
         matrix[row][j] /= pivotValue;
     }
-    cout << "After Normalizing R" << row << ":" << endl;
+    cout << "After Normalizing R" << row+1 << ":" << endl;
     printMatrix(matrix);
 }
 
+//make the values under it equal to zero
 void eliminateRowBelow(vector<vector<double>>& matrix, int pivotRow, int targetRow)
 {
     double factor = matrix[targetRow][pivotRow] / matrix[pivotRow][pivotRow];
@@ -51,10 +60,11 @@ void eliminateRowBelow(vector<vector<double>>& matrix, int pivotRow, int targetR
     {
         matrix[targetRow][j] -= factor * matrix[pivotRow][j];
     }
-    cout << "After eliminating using R" << pivotRow << " on R" << targetRow << ":" << endl;
+    cout << "After eliminating using R" << pivotRow+1<< " on R" << targetRow << ":" << endl;
     printMatrix(matrix);
 }
 
+//get the max
 int find_pivot_Row(vector<vector<double>>& matrix, int startRow, int col)
 {
     int pivotRow = startRow;
@@ -116,7 +126,7 @@ bool has_Infinite_Solution(const vector<vector<double>>& matrix)
 void back_substitution(vector<vector<double>>& matrix, vector<double>& sol)
 {
     int n = matrix.size();
-    sol.assign(n, 0);
+    sol.assign(n, 0);//the values of the unknowns
     for (int i = n - 1; i >= 0; i--)
     {
         sol[i] = matrix[i][n];
